@@ -128,5 +128,21 @@ def update_song(id):
 
     except Exception as error:
         return {"error": str(error)}, 500
+
+@app.route("/song/<int:id>", methods=["DELETE"])
+def delete_song(id):
+    try:
+        result = db.songs.delete_one({"id": id})
+
+        if result.deleted_count == 0:
+            return {"message": "song not found"}, 404
+
+        response = make_response('', 204)
+        return response
+
+    except Exception as error:
+        return {"error": str(error)}, 500
+
+
         
         
