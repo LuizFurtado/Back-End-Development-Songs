@@ -102,4 +102,31 @@ def create_song():
         return response
     except Exception as error:
         return {"error": str(error)}, 500
+
+@app.route("/song/<int:id>", methods=["PUT"])
+def update_song(id):
+    try:
+        updated_data = request.json
+        song = db.songs.find_one({"id": id})
+
+        if song is None:
+            return {"message": "song not found"}, 404
+
+        result = db.songs.update_one(
+            {"id": id},
+            {"$set": updated_data}
+        )
+
+        if result.modified_count == 0:
+            return {"message": "song found, but nothing updated"}, 200
+
+        updated_song = db.songs.find_one({"id": id})
+        response_body = json_util.dumps(updated_song)
+        response = make_response(response_body, 201)
+        response.headers["Content-Type"] = "application/json"
+        return response
+
+    except Exception as error:
+        return {"error": str(error)}, 500
+        
         
