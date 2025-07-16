@@ -51,3 +51,15 @@ def parse_json(data):
 ######################################################################
 # INSERT CODE HERE
 ######################################################################
+@app.route("/health")
+def check_health():
+    return {"status":"ok"}, 200
+
+@app.route("/count")
+def count():
+    try:
+        songs = db.songs.find()
+        count = len(list(songs))
+        return {"count": count}, 200
+    except Exception as error:
+        return {"error": str(error)}, 500
